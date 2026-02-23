@@ -10,6 +10,12 @@ const xoConfig: FlatXoConfig = [
       "import-x/extensions": "off",
     },
   },
+  {
+    files: ["src/routeTree.gen.ts"],
+    rules: {
+      "unicorn/no-abusive-eslint-disable": "off",
+    },
+  },
 ];
 
 export default xoConfig;
