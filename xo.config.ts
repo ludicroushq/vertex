@@ -8,6 +8,7 @@ const xoConfig: FlatXoConfig = [
     react: true,
     rules: {
       "import-x/extensions": "off",
+      "new-cap": "off",
       "react/prop-types": "off",
       "react/react-in-jsx-scope": "off",
       "sort-keys": "error",

@@ -1,13 +1,13 @@
-import { createRouter } from "@tanstack/react-router";
-import { QueryClient } from "@tanstack/react-query";
-import { routerWithQueryClient } from "@tanstack/react-router-with-query";
 import { ConvexQueryClient } from "@convex-dev/react-query";
+import { QueryClient } from "@tanstack/react-query";
+import { createRouter } from "@tanstack/react-router";
+import { routerWithQueryClient } from "@tanstack/react-router-with-query";
 import { ConvexProvider } from "convex/react";
+import { Env } from "./config/env";
 import { routeTree } from "./routeTree.gen";
-import { env } from "./config/env";
 
 export function getRouter() {
-  const convexQueryClient = new ConvexQueryClient(env.VITE_CONVEX_URL);
+  const convexQueryClient = new ConvexQueryClient(new Env().VITE_CONVEX_URL);
 
   const queryClient: QueryClient = new QueryClient({
     defaultOptions: {
@@ -38,7 +38,8 @@ export function getRouter() {
 }
 
 declare module "@tanstack/react-router" {
-  type Register = {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface Register {
     router: ReturnType<typeof getRouter>;
-  };
+  }
 }
