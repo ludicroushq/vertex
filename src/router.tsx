@@ -3,11 +3,13 @@ import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { routerWithQueryClient } from "@tanstack/react-router-with-query";
 import { ConvexProvider } from "convex/react";
-import { Env } from "./config/env";
+import { Config } from "./lib/config";
 import { routeTree } from "./routeTree.gen";
 
 export function getRouter() {
-  const convexQueryClient = new ConvexQueryClient(new Env().VITE_CONVEX_URL);
+  const convexQueryClient = new ConvexQueryClient(
+    new Config().env.VITE_CONVEX_URL,
+  );
 
   const queryClient: QueryClient = new QueryClient({
     defaultOptions: {

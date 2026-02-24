@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@convex-dev/react-query": "^0.1.0",
+    "@logtape/logtape": "^2.0.2",
     "@t3-oss/env-core": "^0.13.10",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "^0.7.0",
@@ -29,7 +30,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "tailwindcss": "^4.1.18",
-    "within-ts": "https://pkg.pr.new/ludicroushq/within-ts@992c1aa",
+    "within-ts": "https://pkg.pr.new/ludicroushq/within-ts@c934643",
     "zod": "^4.3.6"
   },
   "devDependencies": {
