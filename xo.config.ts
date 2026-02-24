@@ -7,7 +7,9 @@ const xoConfig: FlatXoConfig = [
     prettier: "compat",
     react: true,
     rules: {
+      "@typescript-eslint/naming-convention": "off",
       "import-x/extensions": "off",
+      "new-cap": "off",
       "react/prop-types": "off",
       "react/react-in-jsx-scope": "off",
       "sort-keys": "error",

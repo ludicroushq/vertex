@@ -1,6 +1,6 @@
 import { configureSync, getConsoleSink, getLogger } from "@logtape/logtape";
 import { Define } from "within-ts";
-import { Config } from "../config";
+import { isDevelopment } from "../config";
 
 configureSync({
   filters: {},
@@ -12,7 +12,7 @@ configureSync({
     },
     {
       category: [],
-      lowestLevel: new Config().isDevelopment ? "debug" : "info",
+      lowestLevel: isDevelopment ? "debug" : "info",
       sinks: ["console"],
     },
   ],
@@ -24,7 +24,6 @@ configureSync({
 
 const logtape = getLogger();
 
-// eslint-disable-next-line new-cap
 export class Logger extends Define.Logger({
   debug(entry) {
     logtape.debug(entry.message, entry);
