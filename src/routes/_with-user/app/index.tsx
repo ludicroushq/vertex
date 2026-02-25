@@ -9,7 +9,9 @@ export const Route = createFileRoute("/_with-user/app/")({
 });
 
 function RouteComponent() {
-  const { data: user } = useSuspenseQuery(convexQuery(api.auth.getCurrentUser));
+  const { data: user } = useSuspenseQuery(
+    convexQuery(api.auth.queries.getCurrentUser),
+  );
 
   return (
     <div className="container mx-auto my-8">

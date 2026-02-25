@@ -9,6 +9,8 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as auth_mutations from "../auth/mutations.js";
+import type * as auth_queries from "../auth/queries.js";
 import type * as http from "../http.js";
 
 import type {
@@ -19,6 +21,8 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  "auth/mutations": typeof auth_mutations;
+  "auth/queries": typeof auth_queries;
   http: typeof http;
 }>;
 

@@ -2,14 +2,23 @@
   "name": "vertex",
   "private": true,
   "type": "module",
-  "imports": {
-    "#/*": "./src/*"
-  },
   "scripts": {
-    "dev": "vite dev --port 3000",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest run"
+    "build": "run-p *:build",
+    "ci:test": "run-p ci:test:*",
+    "ci:test:typecheck": "bun run --bun tsc --noEmit",
+    "ci:test:xo": "bun run --bun xo",
+    "ci:test:prettier": "bun run --bun prettier --check .",
+    "convex:dev": "convex dev",
+    "dev": "run-p *:dev",
+    "start": "run-p *:start",
+    "test": "run-p test:*",
+    "test:typecheck": "bun run --bun tsc --noEmit",
+    "test:xo": "bun run --bun xo",
+    "test:prettier": "bun run --bun prettier --check .",
+    "vite:build": "bun run vite build",
+    "vite:dev": "bun run vite dev --port 3000",
+    "vite:serve": "bun run vite preview",
+    "vite:start": "bun run .output/server/index.mjs"
   },
   "dependencies": {
     "@convex-dev/better-auth": "^0.10.11",
@@ -32,6 +41,7 @@
     "convex": "^1.32.0",
     "lucide-react": "^0.575.0",
     "nitro": "npm:nitro-nightly@latest",
+    "npm-run-all": "^4.1.5",
     "radix-ui": "^1.4.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -42,6 +52,7 @@
   },
   "devDependencies": {
     "@convex-dev/eslint-plugin": "^1.1.1",
+    "@fontsource-variable/inter": "^5.2.8",
     "@tanstack/devtools-vite": "^0.3.11",
     "@tanstack/eslint-plugin-router": "^1.161.4",
     "@testing-library/dom": "^10.4.0",

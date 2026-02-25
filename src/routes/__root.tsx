@@ -19,9 +19,14 @@ import { getToken } from "@/lib/auth-server";
 import { authClient } from "@/lib/auth-client";
 import { appName } from "@/lib/config";
 
-const getAuth = createServerFn({ method: "GET" }).handler(async () =>
-  getToken(),
-);
+const getAuth = createServerFn({ method: "GET" }).handler(async () => {
+  try {
+    return await getToken();
+  } catch (error) {
+    console.error("getAuth error:", error);
+    return null;
+  }
+});
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;

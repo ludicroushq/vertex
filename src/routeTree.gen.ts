@@ -14,6 +14,7 @@ import { Route as WithUserRouteImport } from './routes/_with-user'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WithoutUserGetStartedIndexRouteImport } from './routes/_without-user/get-started/index'
 import { Route as WithUserAppIndexRouteImport } from './routes/_with-user/app/index'
+import { Route as ApiAuthSignOutRouteImport } from './routes/api/auth/sign-out'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const WithoutUserRoute = WithoutUserRouteImport.update({
@@ -40,6 +41,11 @@ const WithUserAppIndexRoute = WithUserAppIndexRouteImport.update({
   path: '/app/',
   getParentRoute: () => WithUserRoute,
 } as any)
+const ApiAuthSignOutRoute = ApiAuthSignOutRouteImport.update({
+  id: '/api/auth/sign-out',
+  path: '/api/auth/sign-out',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -49,12 +55,14 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/auth/sign-out': typeof ApiAuthSignOutRoute
   '/app/': typeof WithUserAppIndexRoute
   '/get-started/': typeof WithoutUserGetStartedIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/auth/sign-out': typeof ApiAuthSignOutRoute
   '/app': typeof WithUserAppIndexRoute
   '/get-started': typeof WithoutUserGetStartedIndexRoute
 }
@@ -64,20 +72,27 @@ export interface FileRoutesById {
   '/_with-user': typeof WithUserRouteWithChildren
   '/_without-user': typeof WithoutUserRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/auth/sign-out': typeof ApiAuthSignOutRoute
   '/_with-user/app/': typeof WithUserAppIndexRoute
   '/_without-user/get-started/': typeof WithoutUserGetStartedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/auth/$' | '/app/' | '/get-started/'
+  fullPaths:
+    | '/'
+    | '/api/auth/$'
+    | '/api/auth/sign-out'
+    | '/app/'
+    | '/get-started/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/auth/$' | '/app' | '/get-started'
+  to: '/' | '/api/auth/$' | '/api/auth/sign-out' | '/app' | '/get-started'
   id:
     | '__root__'
     | '/'
     | '/_with-user'
     | '/_without-user'
     | '/api/auth/$'
+    | '/api/auth/sign-out'
     | '/_with-user/app/'
     | '/_without-user/get-started/'
   fileRoutesById: FileRoutesById
@@ -87,6 +102,7 @@ export interface RootRouteChildren {
   WithUserRoute: typeof WithUserRouteWithChildren
   WithoutUserRoute: typeof WithoutUserRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiAuthSignOutRoute: typeof ApiAuthSignOutRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -125,6 +141,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof WithUserAppIndexRouteImport
       parentRoute: typeof WithUserRoute
+    }
+    '/api/auth/sign-out': {
+      id: '/api/auth/sign-out'
+      path: '/api/auth/sign-out'
+      fullPath: '/api/auth/sign-out'
+      preLoaderRoute: typeof ApiAuthSignOutRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -165,6 +188,7 @@ const rootRouteChildren: RootRouteChildren = {
   WithUserRoute: WithUserRouteWithChildren,
   WithoutUserRoute: WithoutUserRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiAuthSignOutRoute: ApiAuthSignOutRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

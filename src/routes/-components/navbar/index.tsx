@@ -23,7 +23,7 @@ type MenuItem = {
 
 export function Navbar() {
   const { data: user } = useSuspenseQuery(
-    convexQuery(api.auth.safeGetCurrentUser, {}),
+    convexQuery(api.auth.queries.safeGetCurrentUser),
   );
 
   const menu: MenuItem[] = user
