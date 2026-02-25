@@ -12,8 +12,12 @@ import { createServerFn } from "@tanstack/react-start";
 import type { ConvexQueryClient } from "@convex-dev/react-query";
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 import appCss from "../styles.css?url";
+import { Navbar } from "./-components/navbar";
+import { NotFound } from "./-components/not-found";
+import { Footer } from "./-components/footer";
 import { getToken } from "@/lib/auth-server";
 import { authClient } from "@/lib/auth-client";
+import { appName } from "@/lib/config";
 
 const getAuth = createServerFn({ method: "GET" }).handler(async () =>
   getToken(),
@@ -51,20 +55,21 @@ export const Route = createRootRouteWithContext<{
         name: "viewport",
       },
       {
-        title: "TanStack Start Starter",
+        title: appName,
       },
     ],
   }),
+  notFoundComponent: NotFound,
   shellComponent: RootDocument,
 });
 
 function RootDocument({ children }: { readonly children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="flex h-full flex-col antialiased">
         {children}
         <TanStackDevtools
           config={{
@@ -91,7 +96,11 @@ function RootComponent() {
       authClient={authClient}
       initialToken={context.token}
     >
-      <Outlet />
+      <Navbar />
+      <main className="grow">
+        <Outlet />
+      </main>
+      <Footer />
     </ConvexBetterAuthProvider>
   );
 }

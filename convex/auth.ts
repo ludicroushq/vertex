@@ -13,12 +13,21 @@ export const createAuth = (ctx: GenericCtx<DataModel>) =>
   betterAuth({
     baseURL: serverEnv.SITE_URL,
     database: authComponent.adapter(ctx),
-    emailAndPassword: {
-      enabled: true,
-      requireEmailVerification: false,
-    },
     plugins: [convex({ authConfig })],
+    socialProviders: {
+      google: {
+        clientId: serverEnv.GOOGLE_CLIENT_ID ?? "",
+        clientSecret: serverEnv.GOOGLE_CLIENT_SECRET ?? "",
+      },
+    },
   });
+
+export const safeGetCurrentUser = query({
+  args: {},
+  async handler(ctx) {
+    return authComponent.safeGetAuthUser(ctx);
+  },
+});
 
 export const getCurrentUser = query({
   args: {},

@@ -9,13 +9,36 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WithoutUserRouteImport } from './routes/_without-user'
+import { Route as WithUserRouteImport } from './routes/_with-user'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WithoutUserGetStartedIndexRouteImport } from './routes/_without-user/get-started/index'
+import { Route as WithUserAppIndexRouteImport } from './routes/_with-user/app/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const WithoutUserRoute = WithoutUserRouteImport.update({
+  id: '/_without-user',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WithUserRoute = WithUserRouteImport.update({
+  id: '/_with-user',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const WithoutUserGetStartedIndexRoute =
+  WithoutUserGetStartedIndexRouteImport.update({
+    id: '/get-started/',
+    path: '/get-started/',
+    getParentRoute: () => WithoutUserRoute,
+  } as any)
+const WithUserAppIndexRoute = WithUserAppIndexRouteImport.update({
+  id: '/app/',
+  path: '/app/',
+  getParentRoute: () => WithUserRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -26,37 +49,82 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/app/': typeof WithUserAppIndexRoute
+  '/get-started/': typeof WithoutUserGetStartedIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/app': typeof WithUserAppIndexRoute
+  '/get-started': typeof WithoutUserGetStartedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_with-user': typeof WithUserRouteWithChildren
+  '/_without-user': typeof WithoutUserRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_with-user/app/': typeof WithUserAppIndexRoute
+  '/_without-user/get-started/': typeof WithoutUserGetStartedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/auth/$'
+  fullPaths: '/' | '/api/auth/$' | '/app/' | '/get-started/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/auth/$'
-  id: '__root__' | '/' | '/api/auth/$'
+  to: '/' | '/api/auth/$' | '/app' | '/get-started'
+  id:
+    | '__root__'
+    | '/'
+    | '/_with-user'
+    | '/_without-user'
+    | '/api/auth/$'
+    | '/_with-user/app/'
+    | '/_without-user/get-started/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  WithUserRoute: typeof WithUserRouteWithChildren
+  WithoutUserRoute: typeof WithoutUserRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_without-user': {
+      id: '/_without-user'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof WithoutUserRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_with-user': {
+      id: '/_with-user'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof WithUserRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_without-user/get-started/': {
+      id: '/_without-user/get-started/'
+      path: '/get-started'
+      fullPath: '/get-started/'
+      preLoaderRoute: typeof WithoutUserGetStartedIndexRouteImport
+      parentRoute: typeof WithoutUserRoute
+    }
+    '/_with-user/app/': {
+      id: '/_with-user/app/'
+      path: '/app'
+      fullPath: '/app/'
+      preLoaderRoute: typeof WithUserAppIndexRouteImport
+      parentRoute: typeof WithUserRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -68,8 +136,34 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface WithUserRouteChildren {
+  WithUserAppIndexRoute: typeof WithUserAppIndexRoute
+}
+
+const WithUserRouteChildren: WithUserRouteChildren = {
+  WithUserAppIndexRoute: WithUserAppIndexRoute,
+}
+
+const WithUserRouteWithChildren = WithUserRoute._addFileChildren(
+  WithUserRouteChildren,
+)
+
+interface WithoutUserRouteChildren {
+  WithoutUserGetStartedIndexRoute: typeof WithoutUserGetStartedIndexRoute
+}
+
+const WithoutUserRouteChildren: WithoutUserRouteChildren = {
+  WithoutUserGetStartedIndexRoute: WithoutUserGetStartedIndexRoute,
+}
+
+const WithoutUserRouteWithChildren = WithoutUserRoute._addFileChildren(
+  WithoutUserRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  WithUserRoute: WithUserRouteWithChildren,
+  WithoutUserRoute: WithoutUserRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
