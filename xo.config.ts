@@ -17,7 +17,11 @@ const xoConfig: FlatXoConfig = [
     },
   },
   {
-    ignores: ["src/components/ui/**/*", "src/lib/shadcn/*"],
+    ignores: [
+      "src/components/ui/**/*",
+      "src/lib/shadcn/*",
+      ".agents/skills/**/*",
+    ],
   },
   {
     rules: {
