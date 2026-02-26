@@ -4,19 +4,19 @@ import { convex } from "@convex-dev/better-auth/plugins";
 import authConfig from "./auth.config";
 import { components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
-import { serverEnv } from "./lib/config/env";
+import { convexEnv } from "./lib/config/env";
 
 export const authComponent = createClient<DataModel>(components.betterAuth);
 
 export const createAuth = (ctx: GenericCtx<DataModel>) =>
   betterAuth({
-    baseURL: serverEnv.SITE_URL,
+    baseURL: convexEnv.SITE_URL,
     database: authComponent.adapter(ctx),
     plugins: [convex({ authConfig })],
     socialProviders: {
       google: {
-        clientId: serverEnv.GOOGLE_CLIENT_ID ?? "",
-        clientSecret: serverEnv.GOOGLE_CLIENT_SECRET ?? "",
+        clientId: convexEnv.GOOGLE_CLIENT_ID ?? "",
+        clientSecret: convexEnv.GOOGLE_CLIENT_SECRET ?? "",
       },
     },
   });

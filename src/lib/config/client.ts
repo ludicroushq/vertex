@@ -1,5 +1,5 @@
 import { createEnv } from "@t3-oss/env-core";
-import { REQUIRED_STRING, REQUIRED_URL } from "./utils";
+import { REQUIRED_URL } from "./utils";
 
 export const clientEnv = createEnv({
   client: {
