@@ -4,6 +4,7 @@ import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import { routeTree } from "./routeTree.gen";
 import { clientEnv } from "./lib/config/client";
+import { PendingComponent } from "./routes/-components/pending-component";
 
 export function getRouter() {
   const convexQueryClient = new ConvexQueryClient(clientEnv.VITE_CONVEX_URL, {
@@ -22,6 +23,8 @@ export function getRouter() {
 
   const router = createRouter({
     context: { convexQueryClient, queryClient },
+    defaultPendingComponent: PendingComponent,
+    defaultPendingMs: 0,
     defaultPreload: "intent",
     routeTree,
     scrollRestoration: true,
