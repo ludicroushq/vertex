@@ -10,7 +10,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth);
 
 export const createAuth = (ctx: GenericCtx<DataModel>) =>
   betterAuth({
-    baseURL: convexEnv.BETTER_AUTH_SITE_URL,
+    baseURL: convexEnv.APP_URL,
     database: authComponent.adapter(ctx),
     plugins: [convex({ authConfig })],
     socialProviders: {
