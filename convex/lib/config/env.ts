@@ -1,5 +1,5 @@
 import { createEnv } from "@t3-oss/env-core";
-import { OPTIONAL_STRING, REQUIRED_STRING } from "./utils";
+import { REQUIRED_STRING } from "./utils";
 
 export const convexEnv = createEnv({
   emptyStringAsUndefined: true,
@@ -7,7 +7,7 @@ export const convexEnv = createEnv({
   server: {
     APP_URL: REQUIRED_STRING,
     BETTER_AUTH_SECRET: REQUIRED_STRING,
-    GOOGLE_CLIENT_ID: OPTIONAL_STRING,
-    GOOGLE_CLIENT_SECRET: OPTIONAL_STRING,
+    GOOGLE_CLIENT_ID: REQUIRED_STRING,
+    GOOGLE_CLIENT_SECRET: REQUIRED_STRING,
   },
 });

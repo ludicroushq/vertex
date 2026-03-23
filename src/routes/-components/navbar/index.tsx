@@ -1,13 +1,11 @@
-import { Link } from "@tanstack/react-router";
-import { Menu } from "lucide-react";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { api } from "convex/_generated/api";
-import { convexQuery } from "@convex-dev/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { Link, useRouter } from "@tanstack/react-router";
+import { useState } from "react";
+import { Menu as MenuIcon } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
-import { Menubar } from "@/components/ui/menubar";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -17,59 +15,58 @@ import { appName } from "@/lib/config";
 
 type MenuItem = {
   title: string;
-  url: string;
-  isExternal?: boolean;
+  to: "/" | "/app";
 };
 
-export function Navbar() {
-  const { data: user } = useSuspenseQuery(
-    convexQuery(api.auth.queries.safeGetCurrentUser),
-  );
+type MenuProps = {
+  buttonClassName?: string;
+  isAuthenticated: boolean;
+  isSigningOut: boolean;
+  items: MenuItem[];
+  onNavigate?: () => void;
+  onSignOut: () => void;
+};
 
-  const menu: MenuItem[] = user
-    ? [
-        {
-          title: "Dashboard",
-          url: "/app",
-        },
-        {
-          isExternal: true,
-          title: "Sign Out",
-          url: "/api/auth/sign-out",
-        },
-      ]
-    : [
-        {
-          title: "Home",
-          url: "/",
-        },
-        {
-          title: "Get Started",
-          url: "/get-started",
-        },
-      ];
+type NavbarProps = {
+  isAuthenticated: boolean;
+};
+
+export function Navbar({ isAuthenticated }: NavbarProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
+  const signOutMutation = useMutation({
+    async mutationFn() {
+      await authClient.signOut();
+      await router.navigate({ to: "/" });
+    },
+  });
+  const menuItems: MenuItem[] = isAuthenticated
+    ? [{ title: "Dashboard", to: "/app" }]
+    : [{ title: "Home", to: "/" }];
 
   return (
     <header className="border-b py-4">
       <div className="container mx-auto">
-        <nav className="flex items-center justify-between">
-          <Link className="font-bold text-xl" to={user ? "/app" : "/"}>
+        <nav className="flex items-center justify-between gap-4">
+          <Link
+            className="font-bold text-xl"
+            to={isAuthenticated ? "/app" : "/"}
+          >
             {appName}
           </Link>
 
-          <Menubar className="hidden border-none bg-transparent shadow-none md:flex">
-            {menu.map((item) => (
-              <Button key={item.title} asChild size="sm" variant="ghost">
-                {item.isExternal ? (
-                  <a href={item.url}>{item.title}</a>
-                ) : (
-                  <Link to={item.url}>{item.title}</Link>
-                )}
-              </Button>
-            ))}
-          </Menubar>
+          <div className="hidden items-center gap-2 md:flex">
+            <Menu
+              isAuthenticated={isAuthenticated}
+              isSigningOut={signOutMutation.isPending}
+              items={menuItems}
+              onSignOut={() => {
+                signOutMutation.mutate();
+              }}
+            />
+          </div>
 
-          <Sheet>
+          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
               <Button
                 aria-label="Toggle menu"
@@ -77,30 +74,78 @@ export function Navbar() {
                 size="icon"
                 variant="ghost"
               >
-                <Menu />
+                <MenuIcon />
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
               <SheetHeader>
                 <SheetTitle>{appName}</SheetTitle>
               </SheetHeader>
-              <div className="flex flex-col px-2">
-                {menu.map((item) => (
-                  <SheetClose key={item.title} asChild>
-                    <Button className="justify-start" variant="ghost">
-                      {item.isExternal ? (
-                        <a href={item.url}>{item.title}</a>
-                      ) : (
-                        <Link to={item.url}>{item.title}</Link>
-                      )}
-                    </Button>
-                  </SheetClose>
-                ))}
+              <div className="flex flex-col gap-2 px-2">
+                <Menu
+                  buttonClassName="w-full justify-start"
+                  isAuthenticated={isAuthenticated}
+                  isSigningOut={signOutMutation.isPending}
+                  items={menuItems}
+                  onNavigate={() => {
+                    setIsMenuOpen(false);
+                  }}
+                  onSignOut={() => {
+                    setIsMenuOpen(false);
+                    signOutMutation.mutate();
+                  }}
+                />
               </div>
             </SheetContent>
           </Sheet>
         </nav>
       </div>
     </header>
+  );
+}
+
+function Menu({
+  buttonClassName,
+  isAuthenticated,
+  isSigningOut,
+  items,
+  onNavigate,
+  onSignOut,
+}: MenuProps) {
+  return (
+    <>
+      {items.map((item) => (
+        <Button
+          key={item.title}
+          asChild
+          className={buttonClassName}
+          size="sm"
+          variant="ghost"
+        >
+          <Link to={item.to} onClick={onNavigate}>
+            {item.title}
+          </Link>
+        </Button>
+      ))}
+
+      {isAuthenticated ? (
+        <Button
+          className={buttonClassName}
+          disabled={isSigningOut}
+          size="sm"
+          type="button"
+          variant="ghost"
+          onClick={onSignOut}
+        >
+          Sign Out
+        </Button>
+      ) : (
+        <Button asChild className={buttonClassName} size="sm">
+          <Link to="/get-started" onClick={onNavigate}>
+            Get Started
+          </Link>
+        </Button>
+      )}
+    </>
   );
 }

@@ -30,6 +30,7 @@ const xoConfig: FlatXoConfig = [
       "@typescript-eslint/only-throw-error": "off",
       "import-x/extensions": "off",
       "new-cap": "off",
+      "react/prefer-read-only-props": "off",
       "react/prop-types": "off",
       "react/react-in-jsx-scope": "off",
       "sort-keys": "error",

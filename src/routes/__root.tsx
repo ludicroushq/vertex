@@ -19,14 +19,9 @@ import { getToken } from "@/lib/auth-server";
 import { authClient } from "@/lib/auth-client";
 import { appName } from "@/lib/config";
 
-const getAuth = createServerFn({ method: "GET" }).handler(async () => {
-  try {
-    return await getToken();
-  } catch (error) {
-    console.error("getAuth error:", error);
-    return null;
-  }
-});
+const getAuth = createServerFn({ method: "GET" }).handler(async () =>
+  getToken(),
+);
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -101,7 +96,7 @@ function RootComponent() {
       authClient={authClient}
       initialToken={context.token}
     >
-      <Navbar />
+      <Navbar isAuthenticated={context.isAuthenticated} />
       <main className="grow">
         <Outlet />
       </main>

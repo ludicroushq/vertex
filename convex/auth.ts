@@ -15,8 +15,8 @@ export const createAuth = (ctx: GenericCtx<DataModel>) =>
     plugins: [convex({ authConfig })],
     socialProviders: {
       google: {
-        clientId: convexEnv.GOOGLE_CLIENT_ID ?? "",
-        clientSecret: convexEnv.GOOGLE_CLIENT_SECRET ?? "",
+        clientId: convexEnv.GOOGLE_CLIENT_ID,
+        clientSecret: convexEnv.GOOGLE_CLIENT_SECRET,
       },
     },
   });
