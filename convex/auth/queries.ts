@@ -1,16 +1,21 @@
 import { query } from "../_generated/server";
-import { authComponent } from "../auth";
 
 export const safeGetCurrentUser = query({
   args: {},
   async handler(ctx) {
-    return authComponent.safeGetAuthUser(ctx);
+    return ctx.auth.getUserIdentity();
   },
 });
 
 export const getCurrentUser = query({
   args: {},
   async handler(ctx) {
-    return authComponent.getAuthUser(ctx);
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (identity === null) {
+      throw new Error("Not authenticated");
+    }
+
+    return identity;
   },
 });

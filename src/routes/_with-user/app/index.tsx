@@ -12,10 +12,11 @@ function RouteComponent() {
   const { data: user } = useSuspenseQuery(
     convexQuery(api.auth.queries.getCurrentUser),
   );
+  const name = user.name ?? user.email ?? "there";
 
   return (
     <div className="container mx-auto my-8">
-      <H1>Hello {user.name}!</H1>
+      <H1>Hello {name}!</H1>
     </div>
   );
 }
