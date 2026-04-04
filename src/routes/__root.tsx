@@ -1,6 +1,7 @@
 import type { ConvexQueryClient } from "@convex-dev/react-query";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { type QueryClient } from "@tanstack/react-query";
+import { ConvexProviderWithAuth } from "convex/react";
 import {
   HeadContent,
   Outlet,
@@ -10,6 +11,12 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { getAuth } from "@workos/authkit-tanstack-react-start";
+import {
+  AuthKitProvider,
+  useAccessToken,
+  useAuth,
+} from "@workos/authkit-tanstack-react-start/client";
+import { useCallback, useMemo } from "react";
 import appCss from "../styles.css?url";
 import { Footer } from "./-components/footer";
 import { Navbar } from "./-components/navbar";
@@ -22,17 +29,13 @@ export const Route = createRootRouteWithContext<{
 }>()({
   async beforeLoad(ctx) {
     const auth = await getAuth();
-
-    const { user } = auth;
-
-    if (!user) {
+    if (!auth.user) {
       return {
         auth,
       };
     }
 
-    const token = auth.accessToken;
-    ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
+    ctx.context.convexQueryClient.serverHttpClient?.setAuth(auth.accessToken);
 
     return {
       auth,
@@ -92,12 +95,46 @@ function RootComponent() {
   const context = useRouteContext({ from: Route.id });
 
   return (
-    <>
-      <Navbar isAuthenticated={context.auth.user !== null} />
-      <main className="grow">
-        <Outlet />
-      </main>
-      <Footer />
-    </>
+    <AuthKitProvider initialAuth={context.auth}>
+      <ConvexProviderWithAuth
+        client={context.convexQueryClient.convexClient}
+        useAuth={useAuthFromAuthKit}
+      >
+        <Navbar isAuthenticated={context.auth.user !== null} />
+        <main className="grow">
+          <Outlet />
+        </main>
+        <Footer />
+      </ConvexProviderWithAuth>
+    </AuthKitProvider>
+  );
+}
+
+function useAuthFromAuthKit() {
+  const { loading, user } = useAuth();
+  const { getAccessToken, refresh } = useAccessToken();
+
+  const fetchAccessToken = useCallback(
+    async ({ forceRefreshToken }: { forceRefreshToken: boolean }) => {
+      if (!user) {
+        return null;
+      }
+
+      if (forceRefreshToken) {
+        return (await refresh()) ?? null;
+      }
+
+      return (await getAccessToken()) ?? null;
+    },
+    [getAccessToken, refresh, user],
+  );
+
+  return useMemo(
+    () => ({
+      fetchAccessToken,
+      isAuthenticated: Boolean(user),
+      isLoading: loading,
+    }),
+    [fetchAccessToken, loading, user],
   );
 }
