@@ -10,6 +10,31 @@
       "source": "waynesutton/convexskills",
       "sourceType": "github"
     },
+    "convex-create-component": {
+      "computedHash": "c97d71b524ea9f784d344af20a766de5d48f14b7b824bf791fa517d1da753aca",
+      "source": "get-convex/agent-skills",
+      "sourceType": "github"
+    },
+    "convex-migration-helper": {
+      "computedHash": "bfb51e5b743ac31b313e5e1d206faee7d46bbbc9195360ce9636eead6f13fd3a",
+      "source": "get-convex/agent-skills",
+      "sourceType": "github"
+    },
+    "convex-performance-audit": {
+      "computedHash": "3e411d8250678ca8ec739a40c2874f21e4b5ab17c4dd65e72e3d9d9df6851c31",
+      "source": "get-convex/agent-skills",
+      "sourceType": "github"
+    },
+    "convex-quickstart": {
+      "computedHash": "7879afbb2b954be36ef29d294f3b6c2851cad54e9f5e5ac90461f0f97d4d1fff",
+      "source": "get-convex/agent-skills",
+      "sourceType": "github"
+    },
+    "convex-setup-auth": {
+      "computedHash": "92a5c170cf238f45f08439d9d5d7947af490b880ee8f15306183240483cbed02",
+      "source": "get-convex/agent-skills",
+      "sourceType": "github"
+    },
     "copywriting": {
       "computedHash": "39b7a636c7e254a2f08dee43db6b9f6faf6723de999a6bbce2eb5ac95a130207",
       "source": "coreyhaines31/marketingskills",
