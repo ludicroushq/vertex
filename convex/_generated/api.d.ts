@@ -8,13 +8,17 @@
  * @module
  */
 
+import type * as lib_config_env from "../lib/config/env.js";
+
 import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
 } from "convex/server";
 
-declare const fullApi: ApiFromModules<{}>;
+declare const fullApi: ApiFromModules<{
+  "lib/config/env": typeof lib_config_env;
+}>;
 
 /**
  * A utility for referencing Convex functions in your app's public API.
