@@ -1,3 +1,6 @@
+import type { ConvexQueryClient } from "@convex-dev/react-query";
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { type QueryClient } from "@tanstack/react-query";
 import {
   HeadContent,
   Outlet,
@@ -5,22 +8,12 @@ import {
   createRootRouteWithContext,
   useRouteContext,
 } from "@tanstack/react-router";
-import { type QueryClient } from "@tanstack/react-query";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { TanStackDevtools } from "@tanstack/react-devtools";
-import { useCallback, useMemo } from "react";
-import type { ConvexQueryClient } from "@convex-dev/react-query";
-import { ConvexProviderWithAuth } from "convex/react";
 import { getAuth } from "@workos/authkit-tanstack-react-start";
-import {
-  AuthKitProvider,
-  useAccessToken,
-  useAuth,
-} from "@workos/authkit-tanstack-react-start/client";
 import appCss from "../styles.css?url";
+import { Footer } from "./-components/footer";
 import { Navbar } from "./-components/navbar";
 import { NotFound } from "./-components/not-found";
-import { Footer } from "./-components/footer";
 import { appName } from "@/lib/config";
 
 export const Route = createRootRouteWithContext<{
@@ -30,20 +23,19 @@ export const Route = createRootRouteWithContext<{
   async beforeLoad(ctx) {
     const auth = await getAuth();
 
-    if (auth.user) {
-      ctx.context.convexQueryClient.serverHttpClient?.setAuth(auth.accessToken);
+    const { user } = auth;
 
-      const { accessToken: _accessToken, ...initialAuth } = auth;
-
+    if (!user) {
       return {
-        initialAuth,
-        isAuthenticated: true,
+        auth,
       };
     }
 
+    const token = auth.accessToken;
+    ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
+
     return {
-      initialAuth: auth,
-      isAuthenticated: false,
+      auth,
     };
   },
   component: RootComponent,
@@ -100,46 +92,12 @@ function RootComponent() {
   const context = useRouteContext({ from: Route.id });
 
   return (
-    <AuthKitProvider initialAuth={context.initialAuth}>
-      <ConvexProviderWithAuth
-        client={context.convexQueryClient.convexClient}
-        useAuth={useAuthFromWorkOS}
-      >
-        <Navbar isAuthenticated={context.isAuthenticated} />
-        <main className="grow">
-          <Outlet />
-        </main>
-        <Footer />
-      </ConvexProviderWithAuth>
-    </AuthKitProvider>
-  );
-}
-
-function useAuthFromWorkOS() {
-  const { loading, user } = useAuth();
-  const { getAccessToken, refresh } = useAccessToken();
-
-  const fetchAccessToken = useCallback(
-    async ({ forceRefreshToken }: { forceRefreshToken: boolean }) => {
-      if (!user) {
-        return null;
-      }
-
-      if (forceRefreshToken) {
-        return (await refresh()) ?? null;
-      }
-
-      return (await getAccessToken()) ?? null;
-    },
-    [getAccessToken, refresh, user],
-  );
-
-  return useMemo(
-    () => ({
-      fetchAccessToken,
-      isAuthenticated: Boolean(user),
-      isLoading: loading,
-    }),
-    [fetchAccessToken, loading, user],
+    <>
+      <Navbar isAuthenticated={context.auth.user !== null} />
+      <main className="grow">
+        <Outlet />
+      </main>
+      <Footer />
+    </>
   );
 }

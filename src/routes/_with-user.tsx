@@ -3,9 +3,7 @@ import { getSignInUrl } from "@workos/authkit-tanstack-react-start";
 
 export const Route = createFileRoute("/_with-user")({
   async beforeLoad({ context, location }) {
-    const { isAuthenticated } = context;
-
-    if (!isAuthenticated) {
+    if (!context.auth.user) {
       const signInUrl = await getSignInUrl({
         data: {
           returnPathname: location.pathname,
@@ -16,7 +14,7 @@ export const Route = createFileRoute("/_with-user")({
     }
 
     return {
-      isAuthenticated,
+      auth: context.auth,
     };
   },
   component: RouteComponent,

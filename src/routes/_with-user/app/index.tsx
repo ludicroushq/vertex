@@ -1,7 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { convexQuery } from "@convex-dev/react-query";
-import { api } from "convex/_generated/api";
 import { H1 } from "@/components/ui/typography";
 
 export const Route = createFileRoute("/_with-user/app/")({
@@ -9,10 +6,10 @@ export const Route = createFileRoute("/_with-user/app/")({
 });
 
 function RouteComponent() {
-  const { data: user } = useSuspenseQuery(
-    convexQuery(api.auth.queries.getCurrentUser),
-  );
-  const name = user.name ?? user.email ?? "there";
+  const {
+    auth: { user },
+  } = Route.useRouteContext();
+  const name = user.firstName ?? user.email;
 
   return (
     <div className="container mx-auto my-8">
