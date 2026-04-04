@@ -2,14 +2,12 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_without-user")({
   beforeLoad({ context }) {
-    const { isAuthenticated } = context;
-
-    if (isAuthenticated) {
+    if (context.auth.user) {
       throw redirect({ to: "/app" });
     }
 
     return {
-      isAuthenticated,
+      auth: context.auth,
     };
   },
   component: RouteComponent,

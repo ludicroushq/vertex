@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 import { devtools } from "@tanstack/devtools-vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
@@ -14,13 +13,12 @@ const config = defineConfig({
       },
     }),
     nitro({ rollupConfig: { external: [/^@sentry\//] } }),
-    tsconfigPaths({ projects: ["./tsconfig.json"] }),
     tailwindcss(),
     tanstackStart(),
     viteReact(),
   ],
-  ssr: {
-    noExternal: ["@convex-dev/better-auth"],
+  resolve: {
+    tsconfigPaths: true,
   },
 });
 

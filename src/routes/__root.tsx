@@ -1,3 +1,7 @@
+import type { ConvexQueryClient } from "@convex-dev/react-query";
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { type QueryClient } from "@tanstack/react-query";
+import { ConvexProviderWithAuth } from "convex/react";
 import {
   HeadContent,
   Outlet,
@@ -5,37 +9,36 @@ import {
   createRootRouteWithContext,
   useRouteContext,
 } from "@tanstack/react-router";
-import { type QueryClient } from "@tanstack/react-query";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { TanStackDevtools } from "@tanstack/react-devtools";
-import { createServerFn } from "@tanstack/react-start";
-import type { ConvexQueryClient } from "@convex-dev/react-query";
-import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
+import { getAuth } from "@workos/authkit-tanstack-react-start";
+import {
+  AuthKitProvider,
+  useAccessToken,
+  useAuth,
+} from "@workos/authkit-tanstack-react-start/client";
+import { useCallback, useMemo } from "react";
 import appCss from "../styles.css?url";
+import { Footer } from "./-components/footer";
 import { Navbar } from "./-components/navbar";
 import { NotFound } from "./-components/not-found";
-import { Footer } from "./-components/footer";
-import { getToken } from "@/lib/auth-server";
-import { authClient } from "@/lib/auth-client";
 import { appName } from "@/lib/config";
-
-const getAuth = createServerFn({ method: "GET" }).handler(async () =>
-  getToken(),
-);
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   convexQueryClient: ConvexQueryClient;
 }>()({
   async beforeLoad(ctx) {
-    const token = await getAuth();
-    if (token) {
-      ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
+    const auth = await getAuth();
+    if (!auth.user) {
+      return {
+        auth,
+      };
     }
 
+    ctx.context.convexQueryClient.serverHttpClient?.setAuth(auth.accessToken);
+
     return {
-      isAuthenticated: Boolean(token),
-      token,
+      auth,
     };
   },
   component: RootComponent,
@@ -63,7 +66,7 @@ export const Route = createRootRouteWithContext<{
   shellComponent: RootDocument,
 });
 
-function RootDocument({ children }: { readonly children: React.ReactNode }) {
+function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="h-full">
       <head>
@@ -90,17 +93,48 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
 
 function RootComponent() {
   const context = useRouteContext({ from: Route.id });
+
   return (
-    <ConvexBetterAuthProvider
-      client={context.convexQueryClient.convexClient}
-      authClient={authClient}
-      initialToken={context.token}
-    >
-      <Navbar isAuthenticated={context.isAuthenticated} />
-      <main className="grow">
-        <Outlet />
-      </main>
-      <Footer />
-    </ConvexBetterAuthProvider>
+    <AuthKitProvider initialAuth={context.auth}>
+      <ConvexProviderWithAuth
+        client={context.convexQueryClient.convexClient}
+        useAuth={useAuthFromAuthKit}
+      >
+        <Navbar isAuthenticated={context.auth.user !== null} />
+        <main className="grow">
+          <Outlet />
+        </main>
+        <Footer />
+      </ConvexProviderWithAuth>
+    </AuthKitProvider>
+  );
+}
+
+function useAuthFromAuthKit() {
+  const { loading, user } = useAuth();
+  const { getAccessToken, refresh } = useAccessToken();
+
+  const fetchAccessToken = useCallback(
+    async ({ forceRefreshToken }: { forceRefreshToken: boolean }) => {
+      if (!user) {
+        return null;
+      }
+
+      if (forceRefreshToken) {
+        return (await refresh()) ?? null;
+      }
+
+      return (await getAccessToken()) ?? null;
+    },
+    [getAccessToken, refresh, user],
+  );
+
+  return useMemo(
+    () => ({
+      fetchAccessToken,
+      isAuthenticated: Boolean(user),
+      isLoading: loading,
+    }),
+    [fetchAccessToken, loading, user],
   );
 }

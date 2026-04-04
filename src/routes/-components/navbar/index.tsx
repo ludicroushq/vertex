@@ -1,8 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu as MenuIcon } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -21,10 +19,8 @@ type MenuItem = {
 type MenuProps = {
   buttonClassName?: string;
   isAuthenticated: boolean;
-  isSigningOut: boolean;
   items: MenuItem[];
   onNavigate?: () => void;
-  onSignOut: () => void;
 };
 
 type NavbarProps = {
@@ -33,13 +29,6 @@ type NavbarProps = {
 
 export function Navbar({ isAuthenticated }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const router = useRouter();
-  const signOutMutation = useMutation({
-    async mutationFn() {
-      await authClient.signOut();
-      await router.navigate({ to: "/" });
-    },
-  });
   const menuItems: MenuItem[] = isAuthenticated
     ? [{ title: "Dashboard", to: "/app" }]
     : [{ title: "Home", to: "/" }];
@@ -56,14 +45,7 @@ export function Navbar({ isAuthenticated }: NavbarProps) {
           </Link>
 
           <div className="hidden items-center gap-2 md:flex">
-            <Menu
-              isAuthenticated={isAuthenticated}
-              isSigningOut={signOutMutation.isPending}
-              items={menuItems}
-              onSignOut={() => {
-                signOutMutation.mutate();
-              }}
-            />
+            <Menu isAuthenticated={isAuthenticated} items={menuItems} />
           </div>
 
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -85,14 +67,9 @@ export function Navbar({ isAuthenticated }: NavbarProps) {
                 <Menu
                   buttonClassName="w-full justify-start"
                   isAuthenticated={isAuthenticated}
-                  isSigningOut={signOutMutation.isPending}
                   items={menuItems}
                   onNavigate={() => {
                     setIsMenuOpen(false);
-                  }}
-                  onSignOut={() => {
-                    setIsMenuOpen(false);
-                    signOutMutation.mutate();
                   }}
                 />
               </div>
@@ -107,10 +84,8 @@ export function Navbar({ isAuthenticated }: NavbarProps) {
 function Menu({
   buttonClassName,
   isAuthenticated,
-  isSigningOut,
   items,
   onNavigate,
-  onSignOut,
 }: MenuProps) {
   return (
     <>
@@ -129,19 +104,14 @@ function Menu({
       ))}
 
       {isAuthenticated ? (
-        <Button
-          className={buttonClassName}
-          disabled={isSigningOut}
-          size="sm"
-          type="button"
-          variant="ghost"
-          onClick={onSignOut}
-        >
-          Sign Out
+        <Button asChild className={buttonClassName} size="sm" variant="ghost">
+          <Link preload={false} to="/sign-out" onClick={onNavigate}>
+            Sign Out
+          </Link>
         </Button>
       ) : (
         <Button asChild className={buttonClassName} size="sm">
-          <Link to="/get-started" onClick={onNavigate}>
+          <Link preload={false} to="/get-started" onClick={onNavigate}>
             Get Started
           </Link>
         </Button>
