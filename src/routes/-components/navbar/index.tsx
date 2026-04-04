@@ -105,15 +105,15 @@ function Menu({
 
       {isAuthenticated ? (
         <Button asChild className={buttonClassName} size="sm" variant="ghost">
-          <a href="/api/auth/sign-out" onClick={onNavigate}>
+          <Link preload={false} to="/sign-out" onClick={onNavigate}>
             Sign Out
-          </a>
+          </Link>
         </Button>
       ) : (
         <Button asChild className={buttonClassName} size="sm">
-          <a href="/api/auth/sign-in" onClick={onNavigate}>
+          <Link preload={false} to="/get-started" onClick={onNavigate}>
             Get Started
-          </a>
+          </Link>
         </Button>
       )}
     </>

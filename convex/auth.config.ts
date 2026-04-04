@@ -1,10 +1,7 @@
 import type { AuthConfig } from "convex/server";
+import { convexEnv } from "./lib/config/env";
 
-const clientId = process.env.WORKOS_CLIENT_ID; // eslint-disable-line n/prefer-global/process
-
-if (!clientId) {
-  throw new Error("WORKOS_CLIENT_ID is required");
-}
+const clientId = convexEnv.WORKOS_CLIENT_ID;
 
 export default {
   providers: [
