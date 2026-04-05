@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu as MenuIcon } from "lucide-react";
+import { useAuth } from "@workos/authkit-tanstack-react-start/client";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -87,6 +88,8 @@ function Menu({
   items,
   onNavigate,
 }: MenuProps) {
+  const { signOut } = useAuth();
+
   return (
     <>
       {items.map((item) => (
@@ -104,10 +107,17 @@ function Menu({
       ))}
 
       {isAuthenticated ? (
-        <Button asChild className={buttonClassName} size="sm" variant="ghost">
-          <Link preload={false} to="/sign-out" onClick={onNavigate}>
-            Sign Out
-          </Link>
+        <Button
+          className={buttonClassName}
+          size="sm"
+          type="button"
+          variant="ghost"
+          onClick={() => {
+            onNavigate?.();
+            void signOut({ returnTo: "/" });
+          }}
+        >
+          Sign Out
         </Button>
       ) : (
         <Button asChild className={buttonClassName} size="sm">

@@ -14,6 +14,7 @@ DO NOT run the dev server or any database altering CLIs. Do as much as you can, 
 
 - **Better Auth upgrades**: When upgrading `better-auth`, check the `@convex-dev/better-auth` peer dependency range at the same time; those two packages do not move independently.
 - **Props style**: Do not add `readonly` to routine component prop types unless the user explicitly asks for it.
+- **WorkOS sign-out**: For client-initiated logout in TanStack Start, use AuthKit's client `signOut()` flow rather than navigating to a loader that calls server `signOut()`, or the redirect can run through `_serverFn` fetch and fail on CORS.
 
 ### Style Guide
 
