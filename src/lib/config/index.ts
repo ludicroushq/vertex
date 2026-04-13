@@ -3,5 +3,5 @@ export const isProduction = process.env.NODE_ENV === "production"; // eslint-dis
 
 export const appName = "TODO";
 export const appUrl = isDevelopment
-  ? "http://localhost:3000"
+  ? "https://TODO.test"
   : "https://www.TODO.com";
