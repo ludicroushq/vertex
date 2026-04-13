@@ -45,6 +45,7 @@
         "jsdom": "^29.0.1",
         "lefthook": "^2.1.4",
         "neostandard": "^0.13.0",
+        "portless": "^0.10.1",
         "prettier": "^3.8.1",
         "prettier-plugin-sort-json": "^4.2.0",
         "shadcn": "^3.8.5",
@@ -1650,6 +1651,8 @@
     "plur": ["plur@5.1.0", "", { "dependencies": { "irregular-plurals": "^3.3.0" } }, "sha512-VP/72JeXqak2KiOzjgKtQen5y3IZHn+9GOuLDafPv0eXa47xq0At93XahYBs26MsifCQ4enGKwbjBTKgb9QJXg=="],
 
     "pluralize": ["pluralize@8.0.0", "", {}, "sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA=="],
+
+    "portless": ["portless@0.10.1", "", { "os": [ "linux", "win32", "darwin", ], "bin": { "portless": "dist/cli.js" } }, "sha512-WSzw0bW5tKoK8TIrOr54T43jc0A35XR6RApGEhlbBOl8NgugfQTD3EGKwqE2jjEdcNtPG5WHH/dXzxgVIoY4hw=="],
 
     "possible-typed-array-names": ["possible-typed-array-names@1.1.0", "", {}, "sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg=="],
 
