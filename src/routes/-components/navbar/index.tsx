@@ -120,11 +120,18 @@ function Menu({
           Sign Out
         </Button>
       ) : (
-        <Button asChild className={buttonClassName} size="sm">
-          <Link preload={false} to="/get-started" onClick={onNavigate}>
-            Get Started
-          </Link>
-        </Button>
+        <>
+          <Button asChild className={buttonClassName} size="sm" variant="ghost">
+            <Link preload={false} to="/sign-in" onClick={onNavigate}>
+              Sign In
+            </Link>
+          </Button>
+          <Button asChild className={buttonClassName} size="sm">
+            <Link preload={false} to="/sign-up" onClick={onNavigate}>
+              Sign Up
+            </Link>
+          </Button>
+        </>
       )}
     </>
   );
