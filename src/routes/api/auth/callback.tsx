@@ -51,7 +51,20 @@ export const Route = createFileRoute("/api/auth/callback")({
             status: 307,
           });
         } catch (error) {
-          console.error("OAuth callback failed:", error);
+          const { Errors, Logs } = await import("@/lib/posthog/server");
+
+          Errors.captureException({
+            error,
+            properties: {
+              route: "/api/auth/callback",
+            },
+          });
+          Logs.error({
+            attributes: {
+              route: "/api/auth/callback",
+            },
+            body: "OAuth callback failed",
+          });
 
           return Response.json(
             {

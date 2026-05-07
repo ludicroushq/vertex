@@ -9,6 +9,35 @@ bun install
 bun --bun run dev
 ```
 
+## PostHog
+
+Set `VITE_POSTHOG_KEY` to enable browser analytics, feature flags, session replay, browser logs, and client-side error capture. Set `POSTHOG_API_KEY` to enable server-side analytics, feature flags, and error capture. Set `POSTHOG_LOGS_ENABLED=true` to send TanStack server logs to PostHog Logs through OpenTelemetry.
+
+PostHog uses the hosted US endpoint by default. This boilerplate does not define a public PostHog host variable.
+
+Client and server code should use the typed singleton exports instead of calling SDKs directly:
+
+```ts
+import { Analytics, Errors, FeatureFlags, Logs } from "@/lib/posthog/client";
+```
+
+```ts
+import { Analytics, Errors, FeatureFlags, Logs } from "@/lib/posthog/server";
+```
+
+Add typed events and flags in `src/lib/posthog/schema.ts` before capturing custom analytics events or evaluating feature flags.
+
+Convex is wired with `@posthog/convex` for backend events and feature flags. Set the Convex project token before using those helpers:
+
+```bash
+bunx convex env set POSTHOG_API_KEY phc_your_project_api_key
+```
+
+For Convex logs and errors, configure Convex Dashboard integrations instead of app code:
+
+- Deployment Settings → Integrations → PostHog Log Streams
+- Deployment Settings → Integrations → PostHog Exception Reporting
+
 # Building For Production
 
 To build this application for production:

@@ -1,10 +1,11 @@
 import { createEnv } from "@t3-oss/env-core";
-import { REQUIRED_URL } from "./utils";
+import { OPTIONAL_STRING, REQUIRED_URL } from "./utils";
 
 export const clientEnv = createEnv({
   client: {
     VITE_CONVEX_SITE_URL: REQUIRED_URL,
     VITE_CONVEX_URL: REQUIRED_URL,
+    VITE_POSTHOG_KEY: OPTIONAL_STRING,
   },
   clientPrefix: "VITE_",
   emptyStringAsUndefined: true,
