@@ -16,6 +16,7 @@ DO NOT run the dev server or any database altering CLIs. Do as much as you can, 
 - **Props style**: Do not add `readonly` to routine component prop types unless the user explicitly asks for it.
 - **WorkOS entry points**: Keep sign-in and sign-up as distinct AuthKit entry routes/URLs; funneling both through sign-in confuses the intended WorkOS flows.
 - **WorkOS sign-out**: For client-initiated logout in TanStack Start, use AuthKit's client `signOut()` flow rather than navigating to a loader that calls server `signOut()`, or the redirect can run through `_serverFn` fetch and fail on CORS.
+- **PostHog setup**: Prefer direct PostHog SDK calls over local analytics abstraction layers. Use hosted PostHog defaults unless self-hosting is explicitly required; Convex logs/errors should be configured through Convex dashboard integrations, while `@posthog/convex` is for backend events and flags.
 
 ### Style Guide
 
