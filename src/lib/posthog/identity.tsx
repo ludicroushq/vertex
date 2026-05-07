@@ -8,6 +8,7 @@ export function PostHogIdentity() {
   const email = user?.email;
   const firstName = user?.firstName;
   const lastName = user?.lastName;
+  const name = [firstName, lastName].filter(Boolean).join(" ") || undefined;
   const userId = user?.id;
 
   useEffect(() => {
@@ -26,10 +27,10 @@ export function PostHogIdentity() {
 
     posthog.identify(userId, {
       email,
-      name: [firstName, lastName].filter(Boolean).join(" "),
+      name,
       organizationId,
     });
-  }, [email, firstName, lastName, loading, organizationId, userId]);
+  }, [email, loading, name, organizationId, userId]);
 
   return null;
 }
