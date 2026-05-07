@@ -11,23 +11,30 @@ bun --bun run dev
 
 ## PostHog
 
-Set `VITE_POSTHOG_KEY` to enable browser analytics, feature flags, session replay, browser logs, and client-side error capture. Set `POSTHOG_API_KEY` to enable server-side analytics, feature flags, and error capture. Set `POSTHOG_LOGS_ENABLED=true` to send TanStack server logs to PostHog Logs through OpenTelemetry.
+Set `VITE_POSTHOG_KEY` to enable browser analytics, feature flags, session replay, browser logs, and client-side error capture. Set `POSTHOG_API_KEY` to enable server-side analytics, feature flags, and error capture.
 
 PostHog uses the hosted US endpoint by default. This boilerplate does not define a public PostHog host variable.
 
-Client and server code should use the typed singleton exports instead of calling SDKs directly:
+Client code can use the standard PostHog browser SDK directly:
 
 ```ts
-import { Analytics, Errors, FeatureFlags, Logs } from "@/lib/posthog/client";
+import posthog from "posthog-js";
+
+posthog.capture("example_event");
+posthog.getFeatureFlag("example-flag");
+posthog.captureException(error);
+posthog.logger.info("Example log");
 ```
+
+Server code can use the configured PostHog Node client:
 
 ```ts
-import { Analytics, Errors, FeatureFlags, Logs } from "@/lib/posthog/server";
+import { posthog } from "@/lib/posthog/server";
+
+posthog?.capture({ distinctId: userId, event: "example_event" });
 ```
 
-Add typed events and flags in `src/lib/posthog/schema.ts` before capturing custom analytics events or evaluating feature flags.
-
-Convex is wired with `@posthog/convex` for backend events and feature flags. Set the Convex project token before using those helpers:
+Convex is wired with `@posthog/convex` for backend events and feature flags. Import `posthog` from `convex/posthog.ts`, then use the package APIs directly. Set the Convex project token before using those helpers:
 
 ```bash
 bunx convex env set POSTHOG_API_KEY phc_your_project_api_key

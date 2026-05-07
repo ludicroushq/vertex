@@ -23,11 +23,6 @@
   "dependencies": {
     "@convex-dev/react-query": "^0.1.0",
     "@iconify-icon/react": "^3.0.3",
-    "@opentelemetry/api-logs": "^0.216.0",
-    "@opentelemetry/exporter-logs-otlp-http": "^0.216.0",
-    "@opentelemetry/resources": "^2.7.1",
-    "@opentelemetry/sdk-logs": "^0.216.0",
-    "@opentelemetry/sdk-node": "^0.216.0",
     "@posthog/convex": "^0.2.23",
     "@posthog/react": "^1.9.0",
     "@t3-oss/env-core": "^0.13.11",
