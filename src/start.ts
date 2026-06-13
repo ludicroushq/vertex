@@ -1,11 +1,11 @@
 import { createStart } from "@tanstack/react-start";
 import { authkitMiddleware } from "@workos/authkit-tanstack-react-start";
-import { appUrl } from "./lib/config";
+import { clientEnv } from "./lib/config/client";
 
 export const startInstance = createStart(() => ({
   requestMiddleware: [
     authkitMiddleware({
-      redirectUri: new URL("/api/auth/callback", appUrl).toString(),
+      redirectUri: clientEnv.VITE_WORKOS_REDIRECT_URI,
     }),
   ],
 }));

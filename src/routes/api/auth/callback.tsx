@@ -1,55 +1,41 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getAuthkit } from "@workos/authkit-tanstack-react-start";
+import { handleCallbackRoute } from "@workos/authkit-tanstack-react-start";
 import { appUrl } from "@/lib/config";
 import { posthog } from "@/lib/posthog/server";
 
-const getHeaders = (
-  result: Awaited<
-    ReturnType<Awaited<ReturnType<typeof getAuthkit>>["handleCallback"]>
-  >,
-) => {
-  const setCookie = result.response?.headers.get("Set-Cookie");
-
-  if (setCookie) {
-    return { "Set-Cookie": setCookie };
-  }
-
-  if (result.headers && typeof result.headers === "object") {
-    return result.headers;
-  }
-
-  return {};
-};
+const handleAuthCallback = handleCallbackRoute({
+  returnPathname: "/app",
+});
 
 export const Route = createFileRoute("/api/auth/callback")({
   server: {
     handlers: {
-      async GET({ request }) {
-        const url = new URL(request.url);
-        const code = url.searchParams.get("code");
-        const state = url.searchParams.get("state");
-
-        if (!code) {
-          return Response.json(
-            { error: { message: "Missing authorization code" } },
-            { status: 400 },
-          );
-        }
-
+      async GET(args) {
         try {
-          const authkit = await getAuthkit();
-          const result = await authkit.handleCallback(request, new Response(), {
-            code,
-            state: state ?? undefined,
-          });
-          const redirectUrl = new URL(result.returnPathname, appUrl);
+          const response = await handleAuthCallback(args);
 
-          return new Response(null, {
-            headers: {
-              Location: redirectUrl.toString(),
-              ...getHeaders(result),
-            },
-            status: 307,
+          if (response.status < 300 || response.status >= 400) {
+            return response;
+          }
+
+          const location = response.headers.get("Location");
+
+          if (!location) {
+            return response;
+          }
+
+          const currentUrl = new URL(location, appUrl);
+          const redirectUrl = new URL(
+            `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`,
+            appUrl,
+          );
+          const headers = new Headers(response.headers);
+          headers.set("Location", redirectUrl.toString());
+
+          return new Response(response.body, {
+            headers,
+            status: response.status,
+            statusText: response.statusText,
           });
         } catch (error) {
           posthog.captureException(error, undefined, {

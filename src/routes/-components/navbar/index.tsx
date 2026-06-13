@@ -122,14 +122,14 @@ function Menu({
       ) : (
         <>
           <Button asChild className={buttonClassName} size="sm" variant="ghost">
-            <Link preload={false} to="/sign-in" onClick={onNavigate}>
+            <a href="/api/auth/sign-in" onClick={onNavigate}>
               Sign In
-            </Link>
+            </a>
           </Button>
           <Button asChild className={buttonClassName} size="sm">
-            <Link preload={false} to="/sign-up" onClick={onNavigate}>
+            <a href="/api/auth/sign-up" onClick={onNavigate}>
               Sign Up
-            </Link>
+            </a>
           </Button>
         </>
       )}

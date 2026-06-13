@@ -11,10 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WithoutUserRouteImport } from './routes/_without-user'
 import { Route as WithUserRouteImport } from './routes/_with-user'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as WithoutUserSignUpIndexRouteImport } from './routes/_without-user/sign-up/index'
-import { Route as WithoutUserSignInIndexRouteImport } from './routes/_without-user/sign-in/index'
+import { Route as WithoutUserIndexRouteImport } from './routes/_without-user/index'
 import { Route as WithUserAppIndexRouteImport } from './routes/_with-user/app/index'
+import { Route as ApiAuthSignUpRouteImport } from './routes/api/auth/sign-up'
+import { Route as ApiAuthSignInRouteImport } from './routes/api/auth/sign-in'
 import { Route as ApiAuthCallbackRouteImport } from './routes/api/auth/callback'
 
 const WithoutUserRoute = WithoutUserRouteImport.update({
@@ -25,25 +25,25 @@ const WithUserRoute = WithUserRouteImport.update({
   id: '/_with-user',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const WithoutUserIndexRoute = WithoutUserIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WithoutUserSignUpIndexRoute = WithoutUserSignUpIndexRouteImport.update({
-  id: '/sign-up/',
-  path: '/sign-up/',
-  getParentRoute: () => WithoutUserRoute,
-} as any)
-const WithoutUserSignInIndexRoute = WithoutUserSignInIndexRouteImport.update({
-  id: '/sign-in/',
-  path: '/sign-in/',
   getParentRoute: () => WithoutUserRoute,
 } as any)
 const WithUserAppIndexRoute = WithUserAppIndexRouteImport.update({
   id: '/app/',
   path: '/app/',
   getParentRoute: () => WithUserRoute,
+} as any)
+const ApiAuthSignUpRoute = ApiAuthSignUpRouteImport.update({
+  id: '/api/auth/sign-up',
+  path: '/api/auth/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthSignInRoute = ApiAuthSignInRouteImport.update({
+  id: '/api/auth/sign-in',
+  path: '/api/auth/sign-in',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthCallbackRoute = ApiAuthCallbackRouteImport.update({
   id: '/api/auth/callback',
@@ -52,50 +52,61 @@ const ApiAuthCallbackRoute = ApiAuthCallbackRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof WithoutUserIndexRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
+  '/api/auth/sign-in': typeof ApiAuthSignInRoute
+  '/api/auth/sign-up': typeof ApiAuthSignUpRoute
   '/app/': typeof WithUserAppIndexRoute
-  '/sign-in/': typeof WithoutUserSignInIndexRoute
-  '/sign-up/': typeof WithoutUserSignUpIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof WithoutUserIndexRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
+  '/api/auth/sign-in': typeof ApiAuthSignInRoute
+  '/api/auth/sign-up': typeof ApiAuthSignUpRoute
   '/app': typeof WithUserAppIndexRoute
-  '/sign-in': typeof WithoutUserSignInIndexRoute
-  '/sign-up': typeof WithoutUserSignUpIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/_with-user': typeof WithUserRouteWithChildren
   '/_without-user': typeof WithoutUserRouteWithChildren
+  '/_without-user/': typeof WithoutUserIndexRoute
   '/api/auth/callback': typeof ApiAuthCallbackRoute
+  '/api/auth/sign-in': typeof ApiAuthSignInRoute
+  '/api/auth/sign-up': typeof ApiAuthSignUpRoute
   '/_with-user/app/': typeof WithUserAppIndexRoute
-  '/_without-user/sign-in/': typeof WithoutUserSignInIndexRoute
-  '/_without-user/sign-up/': typeof WithoutUserSignUpIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/auth/callback' | '/app/' | '/sign-in/' | '/sign-up/'
+  fullPaths:
+    | '/'
+    | '/api/auth/callback'
+    | '/api/auth/sign-in'
+    | '/api/auth/sign-up'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/auth/callback' | '/app' | '/sign-in' | '/sign-up'
+  to:
+    | '/'
+    | '/api/auth/callback'
+    | '/api/auth/sign-in'
+    | '/api/auth/sign-up'
+    | '/app'
   id:
     | '__root__'
-    | '/'
     | '/_with-user'
     | '/_without-user'
+    | '/_without-user/'
     | '/api/auth/callback'
+    | '/api/auth/sign-in'
+    | '/api/auth/sign-up'
     | '/_with-user/app/'
-    | '/_without-user/sign-in/'
-    | '/_without-user/sign-up/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   WithUserRoute: typeof WithUserRouteWithChildren
   WithoutUserRoute: typeof WithoutUserRouteWithChildren
   ApiAuthCallbackRoute: typeof ApiAuthCallbackRoute
+  ApiAuthSignInRoute: typeof ApiAuthSignInRoute
+  ApiAuthSignUpRoute: typeof ApiAuthSignUpRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -114,25 +125,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WithUserRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_without-user/': {
+      id: '/_without-user/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_without-user/sign-up/': {
-      id: '/_without-user/sign-up/'
-      path: '/sign-up'
-      fullPath: '/sign-up/'
-      preLoaderRoute: typeof WithoutUserSignUpIndexRouteImport
-      parentRoute: typeof WithoutUserRoute
-    }
-    '/_without-user/sign-in/': {
-      id: '/_without-user/sign-in/'
-      path: '/sign-in'
-      fullPath: '/sign-in/'
-      preLoaderRoute: typeof WithoutUserSignInIndexRouteImport
+      preLoaderRoute: typeof WithoutUserIndexRouteImport
       parentRoute: typeof WithoutUserRoute
     }
     '/_with-user/app/': {
@@ -141,6 +138,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof WithUserAppIndexRouteImport
       parentRoute: typeof WithUserRoute
+    }
+    '/api/auth/sign-up': {
+      id: '/api/auth/sign-up'
+      path: '/api/auth/sign-up'
+      fullPath: '/api/auth/sign-up'
+      preLoaderRoute: typeof ApiAuthSignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/sign-in': {
+      id: '/api/auth/sign-in'
+      path: '/api/auth/sign-in'
+      fullPath: '/api/auth/sign-in'
+      preLoaderRoute: typeof ApiAuthSignInRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/auth/callback': {
       id: '/api/auth/callback'
@@ -165,13 +176,11 @@ const WithUserRouteWithChildren = WithUserRoute._addFileChildren(
 )
 
 interface WithoutUserRouteChildren {
-  WithoutUserSignInIndexRoute: typeof WithoutUserSignInIndexRoute
-  WithoutUserSignUpIndexRoute: typeof WithoutUserSignUpIndexRoute
+  WithoutUserIndexRoute: typeof WithoutUserIndexRoute
 }
 
 const WithoutUserRouteChildren: WithoutUserRouteChildren = {
-  WithoutUserSignInIndexRoute: WithoutUserSignInIndexRoute,
-  WithoutUserSignUpIndexRoute: WithoutUserSignUpIndexRoute,
+  WithoutUserIndexRoute: WithoutUserIndexRoute,
 }
 
 const WithoutUserRouteWithChildren = WithoutUserRoute._addFileChildren(
@@ -179,10 +188,11 @@ const WithoutUserRouteWithChildren = WithoutUserRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   WithUserRoute: WithUserRouteWithChildren,
   WithoutUserRoute: WithoutUserRouteWithChildren,
   ApiAuthCallbackRoute: ApiAuthCallbackRoute,
+  ApiAuthSignInRoute: ApiAuthSignInRoute,
+  ApiAuthSignUpRoute: ApiAuthSignUpRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

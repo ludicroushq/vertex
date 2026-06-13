@@ -24,7 +24,6 @@ export function getRouter() {
   const router = createRouter({
     context: { convexQueryClient, queryClient },
     defaultPendingComponent: PendingComponent,
-    defaultPendingMs: 0,
     defaultPreload: "intent",
     routeTree,
     scrollRestoration: true,
