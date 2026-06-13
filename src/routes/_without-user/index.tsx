@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { H1 } from "@/components/ui/typography";
 
-export const Route = createFileRoute("/")({ component: App });
+export const Route = createFileRoute("/_without-user/")({ component: App });
 
 function App() {
   return (
