@@ -5,6 +5,7 @@ export const convexEnv = createEnv({
   emptyStringAsUndefined: true,
   runtimeEnv: process.env, // eslint-disable-line n/prefer-global/process
   server: {
+    WORKOS_API_KEY: REQUIRED_STRING,
     WORKOS_CLIENT_ID: REQUIRED_STRING,
   },
 });
