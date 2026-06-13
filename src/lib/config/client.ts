@@ -3,7 +3,6 @@ import { OPTIONAL_STRING, REQUIRED_URL } from "./utils";
 
 export const clientEnv = createEnv({
   client: {
-    VITE_APP_URL: REQUIRED_URL,
     VITE_CONVEX_SITE_URL: REQUIRED_URL,
     VITE_CONVEX_URL: REQUIRED_URL,
     VITE_POSTHOG_KEY: OPTIONAL_STRING,

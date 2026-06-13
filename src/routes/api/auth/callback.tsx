@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { handleCallbackRoute } from "@workos/authkit-tanstack-react-start";
-import { clientEnv } from "@/lib/config/client";
+import { appUrl } from "@/lib/config";
 import { posthog } from "@/lib/posthog/server";
 
 const handleAuthCallback = handleCallbackRoute();
@@ -46,10 +46,10 @@ function redirectToAppBase(response: Response) {
     return response;
   }
 
-  const currentUrl = new URL(location, clientEnv.VITE_APP_URL);
+  const currentUrl = new URL(location, appUrl);
   const redirectUrl = new URL(
     `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`,
-    clientEnv.VITE_APP_URL,
+    appUrl,
   );
   const headers = new Headers(response.headers);
   headers.set("Location", redirectUrl.toString());
