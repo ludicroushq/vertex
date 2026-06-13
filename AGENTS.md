@@ -28,6 +28,7 @@ DO NOT run the dev server or any database altering CLIs. Do as much as you can, 
 ### Style Guide
 
 - **No comments**: Do not add comments to code unless the logic is non-obvious due to product requirements or business rules that differ from what a developer would naturally expect.
+- **Small helpers**: Avoid extracting one-off helpers for tiny transforms when the call site remains clear inline.
 
 <!-- convex-ai-start -->
 

@@ -10,11 +10,7 @@ import {
   useRouteContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import {
-  type NoUserInfo,
-  type UserInfo,
-  getAuth,
-} from "@workos/authkit-tanstack-react-start";
+import { getAuth } from "@workos/authkit-tanstack-react-start";
 import {
   AuthKitProvider,
   useAccessToken,
@@ -29,20 +25,24 @@ import { appName } from "@/lib/config";
 import { PostHogIdentity } from "@/lib/posthog/identity";
 import { PostHogAppProvider } from "@/lib/posthog/provider";
 
-type ClientAuth = NoUserInfo | Omit<UserInfo, "accessToken">;
-
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   convexQueryClient: ConvexQueryClient;
 }>()({
   async beforeLoad(ctx) {
     const auth = await getAuth();
-    if (auth.user) {
-      ctx.context.convexQueryClient.serverHttpClient?.setAuth(auth.accessToken);
+
+    if (!auth.user) {
+      return {
+        auth,
+      };
     }
 
+    const { accessToken, ...clientAuth } = auth;
+    ctx.context.convexQueryClient.serverHttpClient?.setAuth(accessToken);
+
     return {
-      auth: toClientAuth(auth),
+      auth: clientAuth,
     };
   },
   component: RootComponent,
@@ -69,24 +69,6 @@ export const Route = createRootRouteWithContext<{
   notFoundComponent: NotFound,
   shellComponent: RootDocument,
 });
-
-function toClientAuth(auth: NoUserInfo | UserInfo): ClientAuth {
-  if (!auth.user) {
-    return auth;
-  }
-
-  return {
-    entitlements: auth.entitlements,
-    featureFlags: auth.featureFlags,
-    impersonator: auth.impersonator,
-    organizationId: auth.organizationId,
-    permissions: auth.permissions,
-    role: auth.role,
-    roles: auth.roles,
-    sessionId: auth.sessionId,
-    user: auth.user,
-  };
-}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
