@@ -9,20 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WithoutUserRouteImport } from './routes/_without-user'
 import { Route as WithUserRouteImport } from './routes/_with-user'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as WithoutUserSignUpIndexRouteImport } from './routes/_without-user/sign-up/index'
-import { Route as WithoutUserSignInIndexRouteImport } from './routes/_without-user/sign-in/index'
 import { Route as WithUserAppIndexRouteImport } from './routes/_with-user/app/index'
 import { Route as ApiAuthSignUpRouteImport } from './routes/api/auth/sign-up'
 import { Route as ApiAuthSignInRouteImport } from './routes/api/auth/sign-in'
 import { Route as ApiAuthCallbackRouteImport } from './routes/api/auth/callback'
 
-const WithoutUserRoute = WithoutUserRouteImport.update({
-  id: '/_without-user',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const WithUserRoute = WithUserRouteImport.update({
   id: '/_with-user',
   getParentRoute: () => rootRouteImport,
@@ -31,16 +24,6 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any)
-const WithoutUserSignUpIndexRoute = WithoutUserSignUpIndexRouteImport.update({
-  id: '/sign-up/',
-  path: '/sign-up/',
-  getParentRoute: () => WithoutUserRoute,
-} as any)
-const WithoutUserSignInIndexRoute = WithoutUserSignInIndexRouteImport.update({
-  id: '/sign-in/',
-  path: '/sign-in/',
-  getParentRoute: () => WithoutUserRoute,
 } as any)
 const WithUserAppIndexRoute = WithUserAppIndexRouteImport.update({
   id: '/app/',
@@ -69,8 +52,6 @@ export interface FileRoutesByFullPath {
   '/api/auth/sign-in': typeof ApiAuthSignInRoute
   '/api/auth/sign-up': typeof ApiAuthSignUpRoute
   '/app/': typeof WithUserAppIndexRoute
-  '/sign-in/': typeof WithoutUserSignInIndexRoute
-  '/sign-up/': typeof WithoutUserSignUpIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,20 +59,15 @@ export interface FileRoutesByTo {
   '/api/auth/sign-in': typeof ApiAuthSignInRoute
   '/api/auth/sign-up': typeof ApiAuthSignUpRoute
   '/app': typeof WithUserAppIndexRoute
-  '/sign-in': typeof WithoutUserSignInIndexRoute
-  '/sign-up': typeof WithoutUserSignUpIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_with-user': typeof WithUserRouteWithChildren
-  '/_without-user': typeof WithoutUserRouteWithChildren
   '/api/auth/callback': typeof ApiAuthCallbackRoute
   '/api/auth/sign-in': typeof ApiAuthSignInRoute
   '/api/auth/sign-up': typeof ApiAuthSignUpRoute
   '/_with-user/app/': typeof WithUserAppIndexRoute
-  '/_without-user/sign-in/': typeof WithoutUserSignInIndexRoute
-  '/_without-user/sign-up/': typeof WithoutUserSignUpIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,8 +77,6 @@ export interface FileRouteTypes {
     | '/api/auth/sign-in'
     | '/api/auth/sign-up'
     | '/app/'
-    | '/sign-in/'
-    | '/sign-up/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -110,25 +84,19 @@ export interface FileRouteTypes {
     | '/api/auth/sign-in'
     | '/api/auth/sign-up'
     | '/app'
-    | '/sign-in'
-    | '/sign-up'
   id:
     | '__root__'
     | '/'
     | '/_with-user'
-    | '/_without-user'
     | '/api/auth/callback'
     | '/api/auth/sign-in'
     | '/api/auth/sign-up'
     | '/_with-user/app/'
-    | '/_without-user/sign-in/'
-    | '/_without-user/sign-up/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   WithUserRoute: typeof WithUserRouteWithChildren
-  WithoutUserRoute: typeof WithoutUserRouteWithChildren
   ApiAuthCallbackRoute: typeof ApiAuthCallbackRoute
   ApiAuthSignInRoute: typeof ApiAuthSignInRoute
   ApiAuthSignUpRoute: typeof ApiAuthSignUpRoute
@@ -136,13 +104,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_without-user': {
-      id: '/_without-user'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof WithoutUserRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_with-user': {
       id: '/_with-user'
       path: ''
@@ -156,20 +117,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_without-user/sign-up/': {
-      id: '/_without-user/sign-up/'
-      path: '/sign-up'
-      fullPath: '/sign-up/'
-      preLoaderRoute: typeof WithoutUserSignUpIndexRouteImport
-      parentRoute: typeof WithoutUserRoute
-    }
-    '/_without-user/sign-in/': {
-      id: '/_without-user/sign-in/'
-      path: '/sign-in'
-      fullPath: '/sign-in/'
-      preLoaderRoute: typeof WithoutUserSignInIndexRouteImport
-      parentRoute: typeof WithoutUserRoute
     }
     '/_with-user/app/': {
       id: '/_with-user/app/'
@@ -214,24 +161,9 @@ const WithUserRouteWithChildren = WithUserRoute._addFileChildren(
   WithUserRouteChildren,
 )
 
-interface WithoutUserRouteChildren {
-  WithoutUserSignInIndexRoute: typeof WithoutUserSignInIndexRoute
-  WithoutUserSignUpIndexRoute: typeof WithoutUserSignUpIndexRoute
-}
-
-const WithoutUserRouteChildren: WithoutUserRouteChildren = {
-  WithoutUserSignInIndexRoute: WithoutUserSignInIndexRoute,
-  WithoutUserSignUpIndexRoute: WithoutUserSignUpIndexRoute,
-}
-
-const WithoutUserRouteWithChildren = WithoutUserRoute._addFileChildren(
-  WithoutUserRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   WithUserRoute: WithUserRouteWithChildren,
-  WithoutUserRoute: WithoutUserRouteWithChildren,
   ApiAuthCallbackRoute: ApiAuthCallbackRoute,
   ApiAuthSignInRoute: ApiAuthSignInRoute,
   ApiAuthSignUpRoute: ApiAuthSignUpRoute,
