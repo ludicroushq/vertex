@@ -25,6 +25,7 @@ DO NOT run the dev server or any database altering CLIs. Do as much as you can, 
 - **Placeholder names**: Leave the existing TODO/TOD project placeholder naming alone unless the user explicitly asks to rename it.
 - **PostHog setup**: Prefer direct PostHog SDK calls over local analytics abstraction layers. Use hosted PostHog defaults unless self-hosting is explicitly required; Convex logs/errors should be configured through Convex dashboard integrations, while `@posthog/convex` is for backend events and flags.
 - **TanStack pathless routes**: Remove pathless layout routes when their children are removed; an empty pathless layout can conflict with the real index route.
+- **Convex route queries**: In TanStack Start routes and React components, use `createConvexRouteQuery` from `convex-route-query` for Convex queries. Use its `fetchQuery`/`prefetchQuery` helpers in route loaders and its `useSuspenseQuery` hook in components instead of calling lower-level Convex React Query helpers directly.
 
 ### Style Guide
 
