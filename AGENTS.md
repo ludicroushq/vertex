@@ -17,6 +17,7 @@ DO NOT run the dev server or any database altering CLIs. Do as much as you can, 
 - **WorkOS entry points**: Keep sign-in and sign-up as distinct AuthKit entry routes/URLs; funneling both through sign-in confuses the intended WorkOS flows.
 - **WorkOS sign-out**: For client-initiated logout in TanStack Start, use AuthKit's client `signOut()` flow rather than navigating to a loader that calls server `signOut()`, or the redirect can run through `_serverFn` fetch and fail on CORS.
 - **SSR pending UI**: Avoid setting TanStack Router's global `defaultPendingMs` to `0`; it can replace server-rendered HTML with a spinner during short hydration/auth revalidation work.
+- **Shared env vars**: If a value is needed by both client and server code, define it explicitly in `src/lib/config/client.ts` with a `VITE_` name and use that public name at shared entry points; do not rely on server-env proxies or implicit package fallbacks.
 - **Docs source of truth**: For framework/auth/backend audits, verify against current official docs and upstream repos; local skills can be stale.
 - **Placeholder names**: Leave the existing TODO/TOD project placeholder naming alone unless the user explicitly asks to rename it.
 

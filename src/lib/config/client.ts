@@ -5,6 +5,7 @@ export const clientEnv = createEnv({
   client: {
     VITE_CONVEX_SITE_URL: REQUIRED_URL,
     VITE_CONVEX_URL: REQUIRED_URL,
+    VITE_WORKOS_REDIRECT_URI: REQUIRED_URL,
   },
   clientPrefix: "VITE_",
   emptyStringAsUndefined: true,
