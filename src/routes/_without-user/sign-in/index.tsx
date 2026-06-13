@@ -1,12 +1,9 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { getSignInUrl } from "@workos/authkit-tanstack-react-start";
 
 export const Route = createFileRoute("/_without-user/sign-in/")({
-  async loader() {
-    const signInUrl = await getSignInUrl({
-      data: "/app",
+  loader() {
+    throw redirect({
+      href: "/api/auth/sign-in?returnPathname=%2Fapp",
     });
-
-    throw redirect({ href: signInUrl });
   },
 });

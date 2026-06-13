@@ -122,14 +122,20 @@ function Menu({
       ) : (
         <>
           <Button asChild className={buttonClassName} size="sm" variant="ghost">
-            <Link preload={false} to="/sign-in" onClick={onNavigate}>
+            <a
+              href="/api/auth/sign-in?returnPathname=%2Fapp"
+              onClick={onNavigate}
+            >
               Sign In
-            </Link>
+            </a>
           </Button>
           <Button asChild className={buttonClassName} size="sm">
-            <Link preload={false} to="/sign-up" onClick={onNavigate}>
+            <a
+              href="/api/auth/sign-up?returnPathname=%2Fapp"
+              onClick={onNavigate}
+            >
               Sign Up
-            </Link>
+            </a>
           </Button>
         </>
       )}
