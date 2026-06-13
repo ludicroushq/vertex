@@ -2,15 +2,16 @@
   "authKit": {
     "dev": {
       "configure": {
-        "appHomepageUrl": "http://localhost:3000",
-        "corsOrigins": ["http://localhost:3000"],
-        "redirectUris": ["http://localhost:3000/api/auth/callback"]
+        "appHomepageUrl": "https://TODO.localhost",
+        "corsOrigins": ["https://TODO.localhost"],
+        "redirectUris": ["https://TODO.localhost/api/auth/callback"]
       },
       "localEnvVars": {
-        "VITE_WORKOS_REDIRECT_URI": "http://localhost:3000/api/auth/callback",
+        "VITE_APP_URL": "https://TODO.localhost",
+        "VITE_WORKOS_REDIRECT_URI": "https://TODO.localhost/api/auth/callback",
         "WORKOS_API_KEY": "${authEnv.WORKOS_API_KEY}",
         "WORKOS_CLIENT_ID": "${authEnv.WORKOS_CLIENT_ID}",
-        "WORKOS_REDIRECT_URI": "http://localhost:3000/api/auth/callback"
+        "WORKOS_REDIRECT_URI": "https://TODO.localhost/api/auth/callback"
       }
     }
   }
