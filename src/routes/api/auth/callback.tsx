@@ -3,7 +3,9 @@ import { handleCallbackRoute } from "@workos/authkit-tanstack-react-start";
 import { appUrl } from "@/lib/config";
 import { posthog } from "@/lib/posthog/server";
 
-const handleAuthCallback = handleCallbackRoute();
+const handleAuthCallback = handleCallbackRoute({
+  returnPathname: "/app",
+});
 
 export const Route = createFileRoute("/api/auth/callback")({
   server: {

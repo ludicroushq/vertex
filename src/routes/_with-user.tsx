@@ -1,12 +1,10 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_with-user")({
-  beforeLoad({ context, location }) {
+  beforeLoad({ context }) {
     if (!context.auth.user) {
-      const returnPathname = encodeURIComponent(location.pathname);
-
       throw redirect({
-        href: `/api/auth/sign-in?returnPathname=${returnPathname}`,
+        href: "/api/auth/sign-in",
       });
     }
 

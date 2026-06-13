@@ -16,6 +16,7 @@ DO NOT run the dev server or any database altering CLIs. Do as much as you can, 
 - **Props style**: Do not add `readonly` to routine component prop types unless the user explicitly asks for it.
 - **WorkOS entry points**: Keep sign-in and sign-up as distinct AuthKit entry routes/URLs; funneling both through sign-in confuses the intended WorkOS flows.
 - **WorkOS callback redirects**: In local dev, redirect users back to the public portless app base URL, not the raw Vite `127.0.0.1` port that may receive the callback internally.
+- **WorkOS auth redirects**: Keep post-login redirects fixed to `/app` and post-logout redirects fixed to `/`; do not add dynamic `returnPathname` support unless the user asks for it.
 - **WorkOS sign-out**: For client-initiated logout in TanStack Start, use AuthKit's client `signOut()` flow rather than navigating to a loader that calls server `signOut()`, or the redirect can run through `_serverFn` fetch and fail on CORS.
 - **SSR pending UI**: Avoid setting TanStack Router's global `defaultPendingMs` to `0`; it can replace server-rendered HTML with a spinner during short hydration/auth revalidation work.
 - **Shared env vars**: If a value is needed by both client and server code, define it explicitly in `src/lib/config/client.ts` with a `VITE_` name and use that public name at shared entry points; do not rely on server-env proxies or implicit package fallbacks.
