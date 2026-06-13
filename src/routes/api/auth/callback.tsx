@@ -14,7 +14,29 @@ export const Route = createFileRoute("/api/auth/callback")({
         try {
           const response = await handleAuthCallback(args);
 
-          return redirectToAppBase(response);
+          if (response.status < 300 || response.status >= 400) {
+            return response;
+          }
+
+          const location = response.headers.get("Location");
+
+          if (!location) {
+            return response;
+          }
+
+          const currentUrl = new URL(location, appUrl);
+          const redirectUrl = new URL(
+            `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`,
+            appUrl,
+          );
+          const headers = new Headers(response.headers);
+          headers.set("Location", redirectUrl.toString());
+
+          return new Response(response.body, {
+            headers,
+            status: response.status,
+            statusText: response.statusText,
+          });
         } catch (error) {
           posthog.captureException(error, undefined, {
             route: "/api/auth/callback",
@@ -36,29 +58,3 @@ export const Route = createFileRoute("/api/auth/callback")({
     },
   },
 });
-
-function redirectToAppBase(response: Response) {
-  if (response.status < 300 || response.status >= 400) {
-    return response;
-  }
-
-  const location = response.headers.get("Location");
-
-  if (!location) {
-    return response;
-  }
-
-  const currentUrl = new URL(location, appUrl);
-  const redirectUrl = new URL(
-    `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`,
-    appUrl,
-  );
-  const headers = new Headers(response.headers);
-  headers.set("Location", redirectUrl.toString());
-
-  return new Response(response.body, {
-    headers,
-    status: response.status,
-    statusText: response.statusText,
-  });
-}
