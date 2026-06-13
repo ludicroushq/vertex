@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { handleCallbackRoute } from "@workos/authkit-tanstack-react-start";
 import { clientEnv } from "@/lib/config/client";
+import { posthog } from "@/lib/posthog/server";
 
 const handleAuthCallback = handleCallbackRoute();
 
@@ -8,9 +9,27 @@ export const Route = createFileRoute("/api/auth/callback")({
   server: {
     handlers: {
       async GET(args) {
-        const response = await handleAuthCallback(args);
+        try {
+          const response = await handleAuthCallback(args);
 
-        return redirectToAppBase(response);
+          return redirectToAppBase(response);
+        } catch (error) {
+          posthog.captureException(error, undefined, {
+            route: "/api/auth/callback",
+          });
+
+          return Response.json(
+            {
+              error: {
+                description:
+                  "Couldn't sign in. Please contact your organization admin if the issue persists.",
+                details: error instanceof Error ? error.message : String(error),
+                message: "Authentication failed",
+              },
+            },
+            { status: 500 },
+          );
+        }
       },
     },
   },

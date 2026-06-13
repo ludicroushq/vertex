@@ -26,6 +26,8 @@ import { Footer } from "./-components/footer";
 import { Navbar } from "./-components/navbar";
 import { NotFound } from "./-components/not-found";
 import { appName } from "@/lib/config";
+import { PostHogIdentity } from "@/lib/posthog/identity";
+import { PostHogAppProvider } from "@/lib/posthog/provider";
 
 type ClientAuth = NoUserInfo | Omit<UserInfo, "accessToken">;
 
@@ -93,7 +95,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="flex h-full flex-col antialiased">
-        {children}
+        <PostHogAppProvider>{children}</PostHogAppProvider>
         <TanStackDevtools
           config={{
             position: "bottom-right",
@@ -120,6 +122,7 @@ function RootComponent() {
         client={context.convexQueryClient.convexClient}
         useAuth={useAuthFromAuthKit}
       >
+        <PostHogIdentity />
         <Navbar isAuthenticated={context.auth.user !== null} />
         <main className="grow">
           <Outlet />

@@ -21,6 +21,7 @@ DO NOT run the dev server or any database altering CLIs. Do as much as you can, 
 - **Shared env vars**: If a value is needed by both client and server code, define it explicitly in `src/lib/config/client.ts` with a `VITE_` name and use that public name at shared entry points; do not rely on server-env proxies or implicit package fallbacks.
 - **Docs source of truth**: For framework/auth/backend audits, verify against current official docs and upstream repos; local skills can be stale.
 - **Placeholder names**: Leave the existing TODO/TOD project placeholder naming alone unless the user explicitly asks to rename it.
+- **PostHog setup**: Prefer direct PostHog SDK calls over local analytics abstraction layers. Use hosted PostHog defaults unless self-hosting is explicitly required; Convex logs/errors should be configured through Convex dashboard integrations, while `@posthog/convex` is for backend events and flags.
 
 ### Style Guide
 
