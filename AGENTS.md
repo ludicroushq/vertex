@@ -26,6 +26,7 @@ DO NOT run the dev server or any database altering CLIs. Do as much as you can, 
 - **PostHog setup**: Prefer direct PostHog SDK calls over local analytics abstraction layers. Use hosted PostHog defaults unless self-hosting is explicitly required; Convex logs/errors should be configured through Convex dashboard integrations, while `@posthog/convex` is for backend events and flags.
 - **TanStack pathless routes**: Remove pathless layout routes when their children are removed; an empty pathless layout can conflict with the real index route.
 - **Convex route queries**: In TanStack Start routes and React components, use `createConvexRouteQuery` from `convex-route-query` for Convex queries. Use its `fetchQuery`/`prefetchQuery` helpers in route loaders and its `useSuspenseQuery` hook in components instead of calling lower-level Convex React Query helpers directly.
+- **Convex public routes**: Do not enable global Convex `expectAuth` when public routes may subscribe to Convex while logged out. Keep browser auth bridging aligned with official provider docs, and enforce private access in protected layouts plus server-side Convex authorization.
 
 ### Style Guide
 

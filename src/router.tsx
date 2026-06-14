@@ -7,9 +7,7 @@ import { clientEnv } from "./lib/config/client";
 import { PendingComponent } from "./routes/-components/pending-component";
 
 export function getRouter() {
-  const convexQueryClient = new ConvexQueryClient(clientEnv.VITE_CONVEX_URL, {
-    expectAuth: true,
-  });
+  const convexQueryClient = new ConvexQueryClient(clientEnv.VITE_CONVEX_URL);
 
   const queryClient: QueryClient = new QueryClient({
     defaultOptions: {
