@@ -28,6 +28,7 @@ DO NOT run the dev server or any database altering CLIs. Do as much as you can, 
 - **TanStack pathless routes**: Remove pathless layout routes when their children are removed; an empty pathless layout can conflict with the real index route.
 - **Convex route queries**: In TanStack Start routes and React components, use `createConvexRouteQuery` from `convex-route-query` for Convex queries. Use its `fetchQuery`/`prefetchQuery` helpers in route loaders and its `useSuspenseQuery` hook in components instead of calling lower-level Convex React Query helpers directly.
 - **Convex public routes**: Do not enable global Convex `expectAuth` when public routes may subscribe to Convex while logged out. Keep browser auth bridging aligned with official provider docs, and enforce private access in protected layouts plus server-side Convex authorization.
+- **Codex local environments**: Keep checked-in Codex local environment setup generic for shared worktrees; avoid local account-specific commands such as Vercel linking or env pulls unless the user explicitly asks for them.
 
 ### Style Guide
 
